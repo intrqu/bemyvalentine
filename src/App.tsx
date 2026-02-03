@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import thanksImg from "./assets/thanks.png";
 import "./App.css";
 
@@ -15,7 +15,6 @@ function ConfettiBurst({ fire }: { fire: boolean }) {
 		const ctx = canvas.getContext("2d");
 		if (!ctx) return;
 
-		// Fullscreen canvas
 		const resize = () => {
 			canvas.width = window.innerWidth;
 			canvas.height = window.innerHeight;
@@ -23,7 +22,6 @@ function ConfettiBurst({ fire }: { fire: boolean }) {
 		resize();
 		window.addEventListener("resize", resize);
 
-		// Particle setup
 		const colors = [
 			"#ff4d6d",
 			"#ffd166",
@@ -74,9 +72,7 @@ function ConfettiBurst({ fire }: { fire: boolean }) {
 		const tick = () => {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-			// Draw
 			for (const p of particles) {
-				// physics
 				p.vx *= drag;
 				p.vy *= drag;
 				p.vy += gravity;
@@ -87,18 +83,14 @@ function ConfettiBurst({ fire }: { fire: boolean }) {
 				p.rot += p.vr;
 				p.life -= 1;
 
-				// render a little rotated rectangle "confetti"
 				ctx.save();
 				ctx.translate(p.x, p.y);
 				ctx.rotate(p.rot);
-
 				ctx.fillStyle = p.color;
 				ctx.fillRect(-p.size / 2, -p.size / 3, p.size, p.size * 0.7);
-
 				ctx.restore();
 			}
 
-			// Remove dead particles
 			for (let i = particles.length - 1; i >= 0; i--) {
 				if (particles[i].life <= 0) particles.splice(i, 1);
 			}
@@ -115,7 +107,6 @@ function ConfettiBurst({ fire }: { fire: boolean }) {
 		};
 	}, [fire]);
 
-	// Only show canvas when firing (prevents it blocking clicks normally)
 	if (!fire) return null;
 
 	return (
@@ -140,7 +131,6 @@ function App() {
 	const [isRunning, setIsRunning] = useState(false);
 	const [noPosition, setNoPosition] = useState({ left: 0, top: 0 });
 
-	// Confetti trigger (we flip it true briefly)
 	const [confetti, setConfetti] = useState(false);
 
 	const moveNoButton = () => {
@@ -165,13 +155,15 @@ function App() {
 		setIsRunning(true);
 	};
 
-	const handleYes = () => {
-		// explode confetti
-		setConfetti(true);
-		// turn it off after a moment so you can re-trigger if you add a reset later
-		setTimeout(() => setConfetti(false), 900);
+	const dodgeNo = (e: React.SyntheticEvent) => {
+		// Helps on touch so it doesn't also click/focus/scroll weirdly
+		e.preventDefault();
+		moveNoButton();
+	};
 
-		// show the thanks image + hide buttons
+	const handleYes = () => {
+		setConfetti(true);
+		setTimeout(() => setConfetti(false), 900);
 		setShowThanks(true);
 	};
 
@@ -184,7 +176,6 @@ function App() {
 				className="card"
 				style={{
 					position: "relative",
-					width: "90vw",
 					height: "90vh",
 					overflow: "hidden",
 					display: "flex",
@@ -216,6 +207,8 @@ function App() {
 									<button
 										ref={noBtnRef}
 										onMouseEnter={moveNoButton}
+										onPointerDown={dodgeNo}
+										onTouchStart={dodgeNo}
 									>
 										no
 									</button>
@@ -228,6 +221,8 @@ function App() {
 							<button
 								ref={noBtnRef}
 								onMouseEnter={moveNoButton}
+								onPointerDown={dodgeNo}
+								onTouchStart={dodgeNo}
 								style={{
 									position: "absolute",
 									left: noPosition.left,

@@ -44,8 +44,17 @@ button.yes {
 	}
 }
 
-.card {
-	padding: 2em;
+@media (min-width: 600px) {
+	.card {
+		padding: 2em;
+		width: 90vw;
+	}
+}
+
+@media (max-width: 599px) {
+	.card {
+		width: 100vw;
+	}
 }
 
 .read-the-docs {
