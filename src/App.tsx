@@ -180,8 +180,7 @@ export default function App() {
 				className="card"
 				style={{
 					position: "relative",
-					width: "100vw",
-					height: "100vh",
+					height: "90vh",
 					overflow: "hidden",
 					display: "flex",
 					flexDirection: "column",
