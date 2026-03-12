@@ -189,7 +189,7 @@ export default function App() {
 					gap: "28px",
 				}}
 			>
-				<h1>Come to the island tomorrow instead of the 18th?</h1>
+				<h1>Be my Valentine?</h1>
 
 				{!showThanks && (
 					<>
